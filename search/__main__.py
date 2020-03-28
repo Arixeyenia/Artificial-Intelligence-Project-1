@@ -3,7 +3,6 @@ import json
 
 from search.util import print_move, print_boom, print_board
 
-
 def main():
     with open(sys.argv[1]) as file:
         data = json.load(file)
@@ -21,7 +20,15 @@ def main():
             board_dict[coords] = "W"
 
         print_board(board_dict)
+        
     # TODO: find and print winning action sequence
+
+
+
+# TODO: output moves
+def output_moves():
+    print("Output moves here")
 
 if __name__ == '__main__':
     main()
+    
