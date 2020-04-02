@@ -1,69 +1,9 @@
 from search.game import Piece, Stack, Directions
 
-#Move action functions that actually does the action on the piece i.e. piece will changee
-def move_left(board_dict, stack, no_pieces, spaces):
+#Move action function that actually does the action on the piece i.e. piece will changee
+def move(board_dict, stack, no_pieces, spaces, direction):
     coord = stack.coordinates
-    new_coord = valid_move_check(board_dict, stack, no_pieces, Directions.left, spaces)
-    pieces = stack.pieces[:no_pieces]
-
-    if new_coord:
-        if board_dict[coord].number == no_pieces:
-            board_dict[new_coord] = board_dict[coord]
-            board_dict[new_coord].set_coordinates(new_coord)
-            del board_dict[coord]
-        elif board_dict[coord].number > no_pieces:
-            board_dict[new_coord] = Stack(pieces, stack.colour)
-            board_dict[coord].remove_pieces(pieces)
-
-        for piece in pieces:
-            piece.set_coordinates(new_coord)
-        return True
-    else:
-        return False
-
-def move_right(board_dict, stack, no_pieces, spaces):
-    coord = stack.coordinates
-    new_coord = valid_move_check(board_dict, stack, no_pieces, Directions.right, spaces)
-    pieces = stack.pieces[:no_pieces]
-
-    if new_coord:
-        if board_dict[coord].number == no_pieces:
-            board_dict[new_coord] = board_dict[coord]
-            board_dict[new_coord].set_coordinates(new_coord)
-            del board_dict[coord]
-        elif board_dict[coord].number > no_pieces:
-            board_dict[new_coord] = Stack(pieces, stack.colour)
-            board_dict[coord].remove_pieces(pieces)
-
-        for piece in pieces:
-            piece.set_coordinates(new_coord)
-        return True
-    else:
-        return False
-
-def move_up(board_dict, stack, no_pieces, spaces):
-    coord = stack.coordinates
-    new_coord = valid_move_check(board_dict, stack, no_pieces, Directions.up, spaces)
-    pieces = stack.pieces[:no_pieces]
-
-    if new_coord:
-        if board_dict[coord].number == no_pieces:
-            board_dict[new_coord] = board_dict[coord]
-            board_dict[new_coord].set_coordinates(new_coord)
-            del board_dict[coord]
-        elif board_dict[coord].number > no_pieces:
-            board_dict[new_coord] = Stack(pieces, stack.colour)
-            board_dict[coord].remove_pieces(pieces)
-
-        for piece in pieces:
-            piece.set_coordinates(new_coord)
-        return True
-    else:
-        return False
-
-def move_down(board_dict, stack, no_pieces, spaces):
-    coord = stack.coordinates
-    new_coord = valid_move_check(board_dict, stack, no_pieces, Directions.down, spaces)
+    new_coord = valid_move_check(board_dict, stack, no_pieces, direction, spaces)
     pieces = stack.pieces[:no_pieces]
 
     if new_coord:

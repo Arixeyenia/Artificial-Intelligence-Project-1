@@ -29,6 +29,14 @@ class Stack:
     def set_coordinates(self, coordinates):
         self.coordinates = coordinates
 
+class Board:
+    def __init__(self, black, white):
+        self.black = black
+        self.white = white
+
+    def getWhite(self):
+        return self.white
+
 class Directions(enum.Enum):
     left = 1
     right = 2
