@@ -34,8 +34,14 @@ class Board:
         self.black = black
         self.white = white
 
-    def getWhite(self):
+    def get_white(self):
         return self.white
+
+    def get_board_dict(self):
+        board_dict = self.white
+        board_dict.update(self.black)
+        
+        return board_dict
 
 class Directions(enum.Enum):
     left = 1
