@@ -41,6 +41,16 @@ def main():
         for key, value in board_dict.items():
             print(str(key) + ": " + str(value))
 
+        co = (5,6)
+        pieces = [Piece(co, 'W'), Piece(co, 'W'), Piece(co, 'W')]
+        stack = Stack(pieces, 'W')
+        board_dict[co] = stack
+
+        print_board(board_dict)
+
+        move_left_stackedversion(board_dict, stack, 1, 2)
+
+        print_board(board_dict)
     # TODO: find and print winning action sequence
 
 

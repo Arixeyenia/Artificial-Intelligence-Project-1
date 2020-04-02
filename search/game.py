@@ -21,9 +21,13 @@ class Stack:
     def __str__(self):
         return self.colour + str(self.number)
 
-    def remove_piece(self, piece):
-        self.pieces.remove(piece)
-        self.number -= 1
+    def remove_pieces(self, pieces):
+        for piece in pieces:
+            self.pieces.remove(piece)
+            self.number -= 1
+
+    def set_coordinates(self, coordinates):
+        self.coordinates = coordinates
 
 class Directions(enum.Enum):
     left = 1
