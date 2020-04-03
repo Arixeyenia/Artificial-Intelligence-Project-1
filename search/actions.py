@@ -58,13 +58,13 @@ def valid_move_check(board, stack, no_pieces, direction, spaces):
 #will actually take the action  
 def boom(board, stack):
     stacks = range_check(board, stack)
-    remove_stack(board, [stack])
+    remove_stack(board, stack)
     for stack in stacks:
         boom(board, stack)
 
 #remove stack from the game/dict
-def remove_stack(board, stacks):
-    for stack in stacks:
+def remove_stack(board, stack):
+    if stack.coordinates in board.get_board_dict():
         coord = stack.coordinates
         if stack.colour == 'B':
             board.black.pop(coord)
