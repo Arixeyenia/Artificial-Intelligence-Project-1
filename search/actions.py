@@ -1,4 +1,4 @@
-from search.game import Piece, Stack, Directions
+from search.game import Piece, Stack, Directions, Board
 
 #Move action function that actually does the action on the piece i.e. piece will changee
 def move(board, stack, no_pieces, spaces, direction):
