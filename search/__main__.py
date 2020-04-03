@@ -48,6 +48,18 @@ def main():
         for key, value in board_dict.items():
             print(str(key) + ": " + str(value))
     # TODO: find and print winning action sequence
+    
+    # lets say theres only one Stack (piece)
+    # path = a_star_search(board, white_stack.coordinate, end_coordinate)
+    # path will be saved as stacks, everything else is just coordinate.
+    # path = [Stack.coord, Stack.coord]
+    
+    # white_stacks = board_white
+    # for white_stack in white_stacks
+        # # do a_star_search for all the white pieces
+        
+        # path = a_star_search(board, white_stack.coordinate, find_nearest_black_range(black_stacks))
+        
 
 
 
