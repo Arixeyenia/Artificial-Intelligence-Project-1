@@ -38,8 +38,8 @@ class Board:
         return self.white
 
     def get_board_dict(self):
-        board_dict = self.white
-        board_dict.update(self.black)
+        board_dict = self.white.copy()
+        board_dict.update(self.black.copy())
         
         return board_dict
 

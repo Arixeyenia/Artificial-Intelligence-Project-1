@@ -1,9 +1,9 @@
 import sys
 import json
 
-from search.util import print_move, print_boom, print_board
-from search.game import Piece, Stack, Board, Directions
-from search.actions import move, valid_move_check, boom, remove_stack, range_check
+from util import print_move, print_boom, print_board
+from game import Piece, Stack, Board, Directions
+from actions import move, valid_move_check, boom, remove_stack, range_check
 
 def main():
     with open(sys.argv[1]) as file:
@@ -41,12 +41,16 @@ def main():
             stack = Stack(Pieces, "W")
             white_dict[coords] = stack
 
+
         board = Board(black_dict, white_dict)
         board_dict = board.get_board_dict()
         print_board(board_dict)
 
+        
+
         for key, value in board_dict.items():
             print(str(key) + ": " + str(value))
+
     # TODO: find and print winning action sequence
     
     # lets say theres only one Stack (piece)

@@ -1,4 +1,4 @@
-from search.game import Piece, Stack, Directions
+from game import Piece, Stack, Directions, Board
 
 #Move action function that actually does the action on the piece i.e. piece will changee
 def move(board, stack, no_pieces, spaces, direction):
@@ -17,7 +17,7 @@ def move(board, stack, no_pieces, spaces, direction):
 
         for piece in pieces:
             piece.set_coordinates(new_coord)
-        return True
+        return new_coord
     else:
         return False
 
@@ -54,16 +54,17 @@ def valid_move_check(board, stack, no_pieces, direction, spaces):
         else:
             return new_coord
 
-#boom a piece - uses range_check and remove_pieces
-#will actually take the action
-def boom(board, piece):
-    pieces = range_check(board, piece)
-    pieces.append(piece)
-    remove_stack(board, pieces)    
+#boom a stack - uses range_check and remove_pieces
+#will actually take the action  
+def boom(board, stack):
+    stacks = range_check(board, stack)
+    remove_stack(board, stack)
+    for stack in stacks:
+        boom(board, stack)
 
 #remove stack from the game/dict
-def remove_stack(board, stacks):
-    for stack in stacks:
+def remove_stack(board, stack):
+    if stack.coordinates in board.get_board_dict():
         coord = stack.coordinates
         if stack.colour == 'B':
             board.black.pop(coord)
@@ -71,16 +72,16 @@ def remove_stack(board, stacks):
             board.white.pop(coord)
 
 #return pieces that is in the range of the piece specified
-def range_check(board, piece):
-    coordinates = piece.coordinates
+def range_check(board, stack):
+    coordinates = stack.coordinates
     stacks = []
     top_left = (coordinates[0] - 1, coordinates[1] + 1)
 
     for x in range(3):
         for y in range(3):
             check_coord = (top_left[0] + x, top_left[1] - y)
-            if check_coord in board.get_board_dict:
+            if check_coord in board.get_board_dict():
                 if (x == 1 and y == 1):
                     continue
-                stacks.append(board.get_board_dict[check_coord])
+                stacks.append(board.get_board_dict()[check_coord])
     return stacks
