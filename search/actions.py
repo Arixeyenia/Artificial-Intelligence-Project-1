@@ -17,7 +17,7 @@ def move(board, stack, no_pieces, spaces, direction):
 
         for piece in pieces:
             piece.set_coordinates(new_coord)
-        return True
+        return new_coord
     else:
         return False
 
