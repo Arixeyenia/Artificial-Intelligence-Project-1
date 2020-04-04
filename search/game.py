@@ -28,7 +28,12 @@ class Stack:
 
     def set_coordinates(self, coordinates):
         self.coordinates = coordinates
-
+        
+class Cluster:
+      def __init__(self, coordinates, intersection):
+        self.coordinates = coordinates
+        self.intersection = intersection
+        
 class Board:
     def __init__(self, black, white):
         self.black = black
@@ -36,6 +41,9 @@ class Board:
 
     def get_white(self):
         return self.white
+    
+    def get_black(self):
+        return self.black
 
     def get_board_dict(self):
         board_dict = self.white.copy()
