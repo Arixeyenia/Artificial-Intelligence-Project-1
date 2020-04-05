@@ -6,12 +6,13 @@ from search.game import Piece, Stack, Board, Cluster, Directions
 from search.actions import move, valid_move_check, boom, remove_stack, range_check
 from search.goal_search import get_black_range, get_all_black_ranges, get_cluster, get_goal_tile, get_intersections, check_chaining, match_with_white
 
+
 def main():
     with open(sys.argv[1]) as file:
         data = json.load(file)
         black_data = data["black"]
-        
-        #TODO: REMOVE AFTER COMPLETION
+
+        # TODO: REMOVE AFTER COMPLETION
         # print(black_data)
 
         black_dict = {}
@@ -28,9 +29,9 @@ def main():
 
         white_data = data["white"]
         white_dict = {}
-        #TODO: REMOVE AFTER COMPLETION
+        # TODO: REMOVE AFTER COMPLETION
         # print(white_data)
-        
+
         for input_stack in white_data:
             coords = tuple(input_stack[1:])
 
@@ -43,41 +44,48 @@ def main():
             white_dict[coords] = stack
 
         board = Board(black_dict, white_dict)
-        
+
         # print(board.black)
-        
+
         all_black_range = get_all_black_ranges(board)
         print("all black range: " + str(all_black_range) + "\n")
-        
+
         chaining_range = check_chaining(board)
         print("chaining range: " + str(chaining_range) + "\n")
+
+        get_intersection = get_intersections(board)
+        print("intersections: " + str(get_intersection) + "\n")
+
+        get_clusterZ = get_cluster(board)
+        print("CLUSTERS: " + str(get_clusterZ) + "\n")
         
+        get_goalss = get_goal_tile(get_clusterZ)
+        print("GOALSSS: " + str(get_goalss))
+
         board_dict = board.get_board_dict()
-        # print_board(board_dict)
+        print_board(board_dict)
 
         # for key, value in board_dict.items():
         #     print(str(key) + ": " + str(value))
-    
+
     # TODO: find and print winning action sequence
-    
+
     # lets say theres only one Stack (piece)
     # path = a_star_search(board, white_stack.coordinate, end_coordinate)
     # path will be saved as stacks, everything else is just coordinate.
     # path = [Stack.coord, Stack.coord]
-    
+
     # white_stacks = board_white
     # for white_stack in white_stacks
         # # do a_star_search for all the white pieces
-        
-        # path = a_star_search(board, white_stack.coordinate, find_nearest_black_range(black_stacks))
-        
 
+        # path = a_star_search(board, white_stack.coordinate, find_nearest_black_range(black_stacks))
 
 
 # TODO: output moves
 def output_moves():
     print("Output moves here")
 
+
 if __name__ == '__main__':
     main()
-    
