@@ -1,4 +1,4 @@
-import enum
+import enum, copy
 
 class Piece:
     def __init__(self, coordinates, colour):
@@ -50,6 +50,9 @@ class Board:
         board_dict.update(self.black.copy())
         
         return board_dict
+
+    def get_copy(self):
+        return copy.deepcopy(self)
 
 class Directions(enum.Enum):
     left = 1
