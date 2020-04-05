@@ -9,8 +9,9 @@ class Node():
 
         # previous node
         self.parent = parent
-        # state = Stack.coordinates
+        # state = board
         self.state = state
+        # board.white().that particular stack
         self.stack = stack
         self.direction = direction
 
@@ -25,10 +26,9 @@ class Node():
         def __str__(self):
             return "parent:%s | state:%s" % (self.parent, self.state)
 
-# - intiialize 
 # initialize_start(Stack.coordinate start)
 def initialize_start(start):
-    start_node = Node(None, start, None)
+    start_node = Node(None, start, None, None)
     start_node.g = 0
     start_node.h = 0
     start_node.f = 0
@@ -37,7 +37,7 @@ def initialize_start(start):
 # initialize_start(Stack.coordinate end)
 # stack with 0 coordinates
 def initialize_end(end):
-    end_node = Node(None, end, None)
+    end_node = Node(None, end, None, None)
     end_node.g = 0
     end_node.h = 0
     end_node.f = 0
@@ -63,7 +63,7 @@ def explore_neighbours(current_node):
             continue
 
         # create neigbours node node
-        neighbours_node = Node(current_node, node_state, direction)
+        neighbours_node = Node(current_node, node_state, None, direction)
 
         # add to neighbours array
         neighbours_list.append(neighbours_node)
@@ -124,7 +124,6 @@ def a_star_search(start, end):
             # current_node = end_node
             while path_node is not None:
                 # change the format to board dict now
-                
                 path.append(path_node)
                 state_path.append(path_node.state)
                 path_node = path_node.parent
