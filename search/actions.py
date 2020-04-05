@@ -54,7 +54,7 @@ def valid_move_check(board, stack, no_pieces, direction, spaces):
         else:
             return new_coord
 
-#boom a stack - uses range_check and remove_pieces
+#boom a stack - uses range_check and remove_stack
 #will actually take the action  
 def boom(board, stack):
     stacks = range_check(board, stack)
@@ -71,7 +71,7 @@ def remove_stack(board, stack):
         elif stack.colour == 'W':
             board.white.pop(coord)
 
-#return pieces that is in the range of the piece specified
+#return stacks that is in the range of the stack specified
 def range_check(board, stack):
     coordinates = stack.coordinates
     stacks = []
@@ -84,4 +84,34 @@ def range_check(board, stack):
                 if (x == 1 and y == 1):
                     continue
                 stacks.append(board.get_board_dict()[check_coord])
+    return stacks
+
+#return white stacks that is in the range of the stack specified
+def white_range_check(board, stack):
+    coordinates = stack.coordinates
+    stacks = []
+    top_left = (coordinates[0] - 1, coordinates[1] + 1)
+
+    for x in range(3):
+        for y in range(3):
+            check_coord = (top_left[0] + x, top_left[1] - y)
+            if check_coord in board.white:
+                if (x == 1 and y == 1):
+                    continue
+                stacks.append(board.white[check_coord])
+    return stacks
+
+#return black stacks that is in the range of the stack specified
+def black_range_check(board, stack):
+    coordinates = stack.coordinates
+    stacks = []
+    top_left = (coordinates[0] - 1, coordinates[1] + 1)
+
+    for x in range(3):
+        for y in range(3):
+            check_coord = (top_left[0] + x, top_left[1] - y)
+            if check_coord in board.black:
+                if (x == 1 and y == 1):
+                    continue
+                stacks.append(board.black[check_coord])
     return stacks
