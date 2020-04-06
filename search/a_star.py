@@ -63,24 +63,22 @@ def explore_neighbours(current_node, white_stack):
 
     neighbours_list = []
 
-    current_stack = white_stack
+    # current_stack = white_stack
 
-    for direction in Directions:
+    # for direction in Directions:
 
-        if not explore(current_node.state, current_stack, white_stack.number, 1, direction):
-            continue
+    #     if not explore(current_node.state, current_stack, white_stack.number, 1, direction):
+    #         continue
 
-        node_state = explore(current_node.state, current_stack,
-                             white_stack.number, 1, direction)
+    #     node_state = explore(current_node.state, current_stack,
+    #                          white_stack.number, 1, direction)
         
-        print(node_state)
+    #     # create neigbours node node
+    #     neighbours_node = Node(current_node, node_state,
+    #                            current_stack, direction)
 
-        # create neigbours node node
-        neighbours_node = Node(current_node, node_state,
-                               current_stack, direction)
-
-        # add to neighbours array
-        neighbours_list.append(neighbours_node)
+    #     # add to neighbours array
+    #     neighbours_list.append(neighbours_node)
 
     return neighbours_list
 
@@ -125,10 +123,10 @@ def a_star_search(start, end, white_stack, end_stack):
         current_node_index = 0
 
         for i in range(len(open_list)):
-            
+
             # make a sorting function comparing the open and closed list
             if open_list[i].f < current_node.f:
-                current_node == open_list[i]
+                current_node = open_list[i]
                 current_node_index = i
 
         # remove current_node from open list
@@ -156,22 +154,29 @@ def a_star_search(start, end, white_stack, end_stack):
             return path[::-1]
 
         # # generate neighbouring nodes
-
         neighbours_list = []
-        
+
+        # After all existing path has been explored, i need to update current stack
+        # so that the new node will be explored
+   
         for direction in Directions:
 
             current_stack = curr_stack_list[-1]
-        
-            if not explore(current_node.state, current_stack, current_stack.number, 1, direction):
-                continue
+
+            # if explore(current_node.state, current_stack, current_stack.number, 1, direction) == False:
+            #     continue
 
             node_state = explore(
-                current_node.state, current_stack, current_stack.number, 1, direction)
-
+                current_node.state, current_stack, current_stack.number, 1, direction)            
+            keys = list(node_state.white.keys())
+            
+            # for coord, stack in node_state.white.items():
+            #     for key in keys:
+            #         node_state.white[coord].coordinates = key
+                
+                
             # create neigbours node node
-            neighbours_node = Node(
-                current_node, node_state, current_stack, direction)
+            neighbours_node = Node(current_node, node_state, current_stack, direction)
 
             # update the current stack
 
@@ -181,9 +186,8 @@ def a_star_search(start, end, white_stack, end_stack):
         for neighbour_node in neighbours_list:
 
             # check if node is explored and if not just skip
-            for closed_node in closed_list:
-                if neighbour_node.state == closed_node.state:
-                    continue
+            if neighbour_node in closed_list:
+                continue
 
             # calculate f value of current path
             neighbour_path_cost = current_node.g + \
@@ -198,18 +202,16 @@ def a_star_search(start, end, white_stack, end_stack):
                 neighbour_node.f = neighbour_node.g + neighbour_node.h
 
                 neighbour_node.parent = current_node
-                
+
                 current_stack = get_current_stack(current_node.state, neighbour_node.state, 1)
                 curr_stack_list.append(current_stack)
-                
-                
+
                 # if node is already in open list, dont add it in
-                for open_node in open_list:
-                    if neighbour_node.state == open_node.state:
-                        continue
+                if neighbour_node in open_list:
+                    continue
 
             # Add the child to the open list
-            
+
             open_list.append(neighbour_node)
         print_board(current_node.state.get_board_dict())
 
@@ -240,30 +242,11 @@ def a_star_main(board, end_boards, goal_pairs):
 
 
 def get_current_stack(old_state, new_state, no_pieces):
-
-    # current state = current_note.state
-    # iterate the keys dude
     old_dict = old_state.white
     new_dict = new_state.white
 
     for old_coord, old_stack in old_dict.items():
 
         for new_coord, new_stack in new_dict.items():
-            # if old_coord == new_dict[new_coord].prev_coordinates:
-            #     return new_dict[new_coord]
-            if old_coord == new_coord:
-                continue
-            if new_dict[new_coord] == old_dict[old_coord]:
+            if old_coord == new_dict[new_coord].prev_coordinates:
                 return new_dict[new_coord]
-                
-
-    # return new_stack
-
-# Node -> state (board) -> white_stack = board.get_white()
-# -> iterate ->  white_stack[goal_tile] = Stack(PIECES, white) (match coordinate with goal coordinate)
-# def get_white_piece(board, goal_tile_list, goal_pairs):
-#     # get board state
-#     white_dict = board.white
-
-#     for coordinate, stack in white_dict.items():
-#         for goal_tile in goal_tile_list:
