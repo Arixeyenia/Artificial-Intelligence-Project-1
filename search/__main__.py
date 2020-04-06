@@ -4,8 +4,9 @@ import json
 from search.util import print_move, print_boom, print_board
 from search.game import Piece, Stack, Board, Cluster, Directions
 from search.actions import move, valid_move_check, boom, remove_stack, range_check
-from search.goal_search import get_black_range, get_all_black_ranges, get_cluster, get_goal_tile, get_intersections, check_chaining, match_with_white, goal_state
-from search.a_star import a_star_search
+from search.goal_search import get_black_range, get_all_black_ranges, get_cluster, get_goal_tiles, get_intersections, check_chaining, match_with_white, goal_state
+from search.a_star import a_star_search, a_star_main, explore_neighbours
+
 
 def main():
     with open(sys.argv[1]) as file:
@@ -44,15 +45,50 @@ def main():
             white_dict[coords] = stack
 
         board = Board(black_dict, white_dict)
+        goal_board = Board(black_dict, white_dict)
         # print(board.black)
+             # Find the range of all black tiles
+        all_black_range = get_all_black_ranges(board)
+        print("All black range: " + str(all_black_range) + "\n")
 
-        # set up the goals
-        goal = set_up_goal(board)
-        goal_dict = goal.get_board_dict()
+        # Combine ranges of black tokens to take into account chain explosions
+        chaining_range = check_chaining(board)
+        print("Chaining range: " + str(chaining_range) + "\n")
+
+        # Find the intersections of adjacent black tokens
+        get_intersection = get_intersections(board)
+        print("Intersections: " + str(get_intersection) + "\n")
+
+        # Find the clusters of black tokens
+        clusters = get_cluster(board)
+        print("Cluster: " + str(clusters) + "\n")
+
+        list_of_goal_tiles = get_goal_tiles(clusters)
+        print("Goals: " + str(list_of_goal_tiles))
+
+        # Match a black cluster with a white token
+        match_pairs = match_with_white(board, list_of_goal_tiles)
+        print("matching: " + str(match_pairs))
+        
+
         board_dict = board.get_board_dict()
+        # set up the goals
+        goals = set_up_goal(goal_board, list_of_goal_tiles, match_pairs)
         # print_board(board_dict)
-        print_board(goal_dict)
+        
 
+        goal_dict_list = []
+        
+        for goal in goals:
+            goal_dict = goal
+            goal_dict_list.append(goal_dict)
+            
+            # print_board(goal_dict)
+            # for key, value in goal_dict.items():
+            #     print(str(key) + ": " + str(value))
+
+        total_paths = a_star_main(board, goal_dict_list, match_pairs)
+        # print(total_paths)
         # for key, value in board_dict.items():
         #     print(str(key) + ": " + str(value))
 
@@ -68,34 +104,24 @@ def main():
         # # do a_star_search for all the white pieces
 
         # path = a_star_search(board, white_stack.coordinate, find_nearest_black_range(black_stacks))
-def set_up_goal(board):
-    all_black_range = get_all_black_ranges(board)
-    print("all black range: " + str(all_black_range) + "\n")
 
-    chaining_range = check_chaining(board)
-    print("chaining range: " + str(chaining_range) + "\n")
+# 
 
-    get_intersection = get_intersections(board)
-    print("intersections: " + str(get_intersection) + "\n")
 
-    get_clusterZ = get_cluster(board)
-    print("CLUSTERS: " + str(get_clusterZ) + "\n")
 
-    get_goalss = get_goal_tile(get_clusterZ)
-    print("GOALSSS: " + str(get_goalss))
+def set_up_goal(board, list_of_goal_tiles, match_pairs):
 
-    match_pairs = match_with_white(get_goalss, board)
-    print("matching: " + str(match_pairs))
-    
-    goal_states = goal_state(board, get_goalss, match_pairs)
+    # Get a list of boards of the final states
+    goal_states = goal_state(board, list_of_goal_tiles, match_pairs)
     print("goal state: " + str(goal_states))
-    
+
     return goal_states
-    
+
 
 # TODO: output moves
 def output_moves():
     print("Output moves here")
+
 
 if __name__ == '__main__':
     main()

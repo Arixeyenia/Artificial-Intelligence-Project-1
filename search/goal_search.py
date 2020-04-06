@@ -100,9 +100,9 @@ def get_intersections(board):
     return intersection_list
 
 
+# Get list of clusters Cluster(black_coordinates, [intersections])
 def get_cluster(board):
 
-    # Get list of clusters Cluster(black_coordinates, [intersections])
     intersection_list = get_intersections(board)
 
     cluster_dict = {}
@@ -113,13 +113,8 @@ def get_cluster(board):
 
         current = set(intersection_list[i].coordinates)
         current_inter = set(intersection_list[i].intersection)
-        print("hello" + str(i) + " : " + str(intersection_list[i].coordinates))
 
         for j in range(len(intersection_list)):
-
-            print("hellos" + str(j) + " : " +
-                  str(intersection_list[j].coordinates) + str(intersection_list[j].intersection))
-            print(len(board.white))
 
             # if there's only one cluster
             if len(current.union(set(intersection_list[j].coordinates))) == len(list(board.black)):
@@ -152,60 +147,80 @@ def get_cluster(board):
     else:
         return False
 
-#  get the goal tile
+#  Get a goal tile from each cluster and append to a list
 
 
-def get_goal_tile(cluster_dict):
+def get_goal_tiles(cluster_dict):
 
     goal_tile_list = []
-
     cluster_list = list(cluster_dict.values())
 
+	# TODO: assuming something didnt work, check range later
     for cluster in cluster_list:
-        # just get the first intersection in list
         goal_tile_list.append(cluster[0])
-
-        # TODO: assuming something didnt work, check range later
-
     return goal_tile_list
 
+# Create a new goal tile
 
+
+def goal_tile_states(board, goal_tile, coord):
+
+    new_board = board.get_copy()
+    # coords = list(new_board.white.keys())
+    new_board.white[goal_tile] = new_board.white[coord]
+    for piece in new_board.white[coord].pieces:
+        piece.set_coordinates(goal_tile)
+        if goal_tile != coord:
+            del new_board.white[coord]
+
+    return new_board
+# match a starting white stack with a goal tile
+
+
+def match_with_white(board, end_boards):
+
+    white_stacks = list(board.get_white().keys())
+    goal_pairs = {}
+
+    for i, end_board in enumerate(end_boards):
+        goal_pairs[white_stacks[i]] = end_board
+
+    return goal_pairs
+
+# produce the final goal state
 def goal_state(board, goal_tile_list, goal_pair):
-    coords = list(board.white.keys())
 
-    # check if goal state is valid
+    state = board.get_copy()
+    coords = list(state.white.keys())
+ 
+    consecutive_states = []
 
-    # take into account cases like case number 4, where being in a goal
-    # tile would result in losing the game
-
-    # create a final board state
     for goal_tile in goal_tile_list:
         for coord in coords:
             if goal_pair[coord] == goal_tile:
-                board.white[goal_tile] = board.white[coord]
-                # board.white[coord].set_coordinates(goal_tile)
-                for piece in board.white[coord].pieces:
-                    piece.set_coordinates(goal_tile)
-                if goal_tile != coord:
-                	del board.white[coord]
-    return board
+                state = goal_tile_states(
+                    state.get_copy(), goal_pair[coord], coord)
+                consecutive_states.append(state)
+                
+    return consecutive_states
 
-# match a starting white tile with a goal tile
+# def get_goal_coordinate(board, end_board, goal_tile_list, goal_pairs):
 
-
-def match_with_white(goal_tiles, board):
-
-    white_stacks = list(board.white.keys())
-    goal_pair = {}
-
-    for i, goal_tile in enumerate(goal_tiles):
-        goal_pair[white_stacks[i]] = goal_tile
-
-    return goal_pair
+#     state = board.get_copy()
+#     new_coords = list(end_board.white.items())
+	
+#     coords = list(state.white.keys())
+    
+#     for coordinate, stack in end_board.white.items():
+#         for coord in 
+     
+ 
+#     for goal_tile in goal_tile_list:
+#         for coord in coords:
+#             if goal_pairs[coord] == goal_tile:
+#                 return goal_tile
 
 # Check if the tile is valid
-
-
 def valid_tile(coordinate, board):
     if coordinate in list(board.black.values()):
         return False

@@ -1,6 +1,39 @@
 from search.game import Piece, Stack, Directions, Board
 
 #Move action function that actually does the action on the piece i.e. piece will changee
+def explore(board, stack, no_pieces, spaces, direction):
+
+    coord = stack.coordinates
+
+    new_coord = valid_move_check(board, stack, no_pieces, direction, spaces)
+    pieces = stack.pieces[:no_pieces]
+    
+    new_board = board.get_copy()
+
+    if new_coord:
+        # print(new_coord)
+        for piece in pieces:
+            piece.set_coordinates(new_coord)
+            # piece.coordinates = new_coord
+            
+        if board.white[coord].number == no_pieces:
+            # new_board.white[coord] = new_board.white[coord]
+            new_board.white[new_coord] = board.white[coord]
+            new_board.white[new_coord].prev_coordinates = coord
+            del new_board.white[coord]
+            
+        elif new_board.white[coord].number > no_pieces:
+            new_board.white[new_coord] = Stack(pieces, stack.colour)
+            new_board.white[coord].remove_pieces(pieces)
+            
+        new_board.white[new_coord].set_coordinates(new_coord)
+        
+        print(new_board.white[new_coord].coordinates)
+        
+        return new_board
+    else:
+        return False
+    
 def move(board, stack, no_pieces, spaces, direction):
     coord = stack.coordinates
     new_coord = valid_move_check(board, stack, no_pieces, direction, spaces)
