@@ -41,8 +41,11 @@ def move(board, stack, no_pieces, spaces, direction):
 
     if new_coord:
         if board.white[coord].number == no_pieces:
-            board.white[coord] = board.white[coord]
-            board.white[new_coord].set_coordinates(new_coord)
+            if new_coord in board.white:
+                board.white[new_coord].add_stack(board.white[coord])
+            else:
+                board.white[new_coord] = board.white[coord]
+                board.white[new_coord].set_coordinates(new_coord)
             del board.white[coord]
         elif board.white[coord].number > no_pieces:
             board.white[new_coord] = Stack(pieces, stack.colour)
@@ -50,7 +53,7 @@ def move(board, stack, no_pieces, spaces, direction):
 
         for piece in pieces:
             piece.set_coordinates(new_coord)
-        return new_coord
+        return board.white[new_coord]
     else:
         return False
 

@@ -1,5 +1,7 @@
 # a_star_search(board_dict, start_node, goal_node): return path from start_node -> goal_node (an array of board dicts)
 
+from operator import itemgetter
+
 from search.game import Piece, Stack, Board, Cluster, Directions
 from search.actions import valid_move_check, move, explore
 from search.util import print_move, print_boom, print_board
@@ -88,7 +90,7 @@ def explore_neighbours(current_node, white_stack):
 # - get best node (the thing a* is based on) = heuristics
 
 
-def heuristics(start_node, target_node, white_stack):
+def heuristics(start_node, target_node):
     D = 1
     dx = abs(start_node.stack.coordinates[0] -
              target_node.stack.coordinates[0])
@@ -128,7 +130,7 @@ def a_star_search(start, end, white_stack, end_stack):
             
             # make a sorting function comparing the open and closed list
             if open_list[i].f < current_node.f:
-                current_node == open_list[i]
+                current_node = open_list[i]
                 current_node_index = i
 
         # remove current_node from open list
@@ -138,7 +140,7 @@ def a_star_search(start, end, white_stack, end_stack):
 
         # convert the paths from coordinates to Stacks.
         # if current_node reached the goal_node
-        if current_node.state == end_node.state:
+        if goal_test(current_node, end_node):
             # return
             path = []
             state_path = []
@@ -158,49 +160,60 @@ def a_star_search(start, end, white_stack, end_stack):
         # # generate neighbouring nodes
 
         neighbours_list = []
-        
-        for direction in Directions:
 
-            current_stack = curr_stack_list[-1]
-        
-            if not explore(current_node.state, current_stack, current_stack.number, 1, direction):
-                continue
+        #iterate how many piececs to move
+        for no_pieces in range(len(current_node.stack.pieces)):
+            
+            #iterate direction for specified stack (group of pieces) to move
+            for direction in Directions:
 
-            node_state = explore(
-                current_node.state, current_stack, current_stack.number, 1, direction)
+                #iterate number of spaces to move in that direction
+                for spaces in range(len(current_node.stack.pieces)):
 
-            # create neigbours node node
-            neighbours_node = Node(
-                current_node, node_state, current_stack, direction)
+                    #current_stack = curr_stack_list[-1]
+                
+                    new_state = current_node.state.get_copy()
+                    new_stack = new_state.white[current_node.stack.coordinates]
 
-            # update the current stack
+                    stack = move(new_state, new_stack, no_pieces+1, spaces+1, direction)
+                    if not stack:
+                        continue
+                    
+                    print_board(new_state.get_board_dict())
+                    #if not explore(current_node.state, current_stack, current_stack.number, 1, direction):
+                    #    continue
 
-            # add to neighbours array
-            neighbours_list.append(neighbours_node)
+                    #node_state = explore(
+                    #    current_node.state, current_stack, current_stack.number, 1, direction)
+
+                    # create neigbours node node
+                    neighbour_node = Node(current_node, new_state, stack, direction)
+
+                    # update the current stack
+
+                    # add to neighbours array
+                    neighbours_list.append(neighbour_node)
 
         for neighbour_node in neighbours_list:
 
             # check if node is explored and if not just skip
-            for closed_node in closed_list:
-                if neighbour_node.state == closed_node.state:
-                    continue
+            if expanded_previously(closed_list, neighbour_node):
+                continue
 
             # calculate f value of current path
             neighbour_path_cost = current_node.g + \
-                heuristics(current_node, neighbour_node, current_stack)
+                heuristics(current_node, neighbour_node)
 
             # - goal test
             # check if the new path is shorter or neighbour is not included in open list yet
             if (neighbour_path_cost < current_node.g) or (neighbour_node not in open_list):
                 neighbour_node.g = neighbour_path_cost
                 neighbour_node.h = heuristics(
-                    neighbour_node, end_node, current_stack)
+                    neighbour_node, end_node)
                 neighbour_node.f = neighbour_node.g + neighbour_node.h
-
-                neighbour_node.parent = current_node
                 
-                current_stack = get_current_stack(current_node.state, neighbour_node.state, 1)
-                curr_stack_list.append(current_stack)
+                #current_stack = get_current_stack(neighbour_node.state)
+                #curr_stack_list.append(current_stack)
                 
                 
                 # if node is already in open list, dont add it in
@@ -211,7 +224,6 @@ def a_star_search(start, end, white_stack, end_stack):
             # Add the child to the open list
             
             open_list.append(neighbour_node)
-        print_board(current_node.state.get_board_dict())
 
 
 def a_star_main(board, end_boards, goal_pairs):
@@ -239,25 +251,10 @@ def a_star_main(board, end_boards, goal_pairs):
 # get current stack by comparing the old state and the new state
 
 
-def get_current_stack(old_state, new_state, no_pieces):
-
-    # current state = current_note.state
-    # iterate the keys dude
-    old_dict = old_state.white
-    new_dict = new_state.white
-
-    for old_coord, old_stack in old_dict.items():
-
-        for new_coord, new_stack in new_dict.items():
-            # if old_coord == new_dict[new_coord].prev_coordinates:
-            #     return new_dict[new_coord]
-            if old_coord == new_coord:
-                continue
-            if new_dict[new_coord] == old_dict[old_coord]:
-                return new_dict[new_coord]
-                
-
-    # return new_stack
+def get_current_stack(new_state):
+    coord = list(new_state.white.keys())[-1]
+    return new_state.white[coord]
+    
 
 # Node -> state (board) -> white_stack = board.get_white()
 # -> iterate ->  white_stack[goal_tile] = Stack(PIECES, white) (match coordinate with goal coordinate)
@@ -267,3 +264,20 @@ def get_current_stack(old_state, new_state, no_pieces):
 
 #     for coordinate, stack in white_dict.items():
 #         for goal_tile in goal_tile_list:
+
+def expanded_previously(closed_list, node):
+    node_white_coordinates = sorted(list(node.state.white.keys()), key=itemgetter(0))
+    for closed_node in closed_list:
+        closed_node_white_coordinates = sorted(list(closed_node.state.white.keys()), key=itemgetter(0))
+        if node_white_coordinates == closed_node_white_coordinates:
+            return True
+
+    return False
+
+def goal_test(node, end_node):
+    node_white_coordinates = sorted(list(node.state.white.keys()), key=itemgetter(0))
+    end_node_white_coordinates = sorted(list(end_node.state.white.keys()), key=itemgetter(0))
+    if node_white_coordinates == end_node_white_coordinates:
+        return True
+    else:
+        return False

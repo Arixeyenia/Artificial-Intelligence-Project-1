@@ -28,6 +28,13 @@ class Stack:
 
     def set_coordinates(self, coordinates):
         self.coordinates = coordinates
+
+    def add_stack(self, stack):
+        self.pieces += stack.pieces
+        self.number = len(self.pieces)
+
+    def get_substack(self, no_pieces):
+        return Stack(self.pieces[:no_pieces], self.colour)
         
 class Cluster:
       def __init__(self, coordinates, intersection):
