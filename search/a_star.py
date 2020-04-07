@@ -2,10 +2,10 @@
 
 from operator import itemgetter
 
-from game import Piece, Stack, Board, Cluster, Directions
-from actions import valid_move_check, move, explore
-from util import print_move, print_boom, print_board
-from goal_search import match_with_white
+from search.game import Piece, Stack, Board, Cluster, Directions
+from search.actions import valid_move_check, move, explore
+from search.util import print_move, print_boom, print_board
+from search.goal_search import match_with_white
 
 # Define the node Node(Node parent, state current_state)
 
