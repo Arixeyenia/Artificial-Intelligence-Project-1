@@ -65,7 +65,7 @@ def main():
         print("Cluster: " + str(clusters) + "\n")
 
         list_of_goal_tiles = get_goal_tiles(board, clusters)
-        print("Goals: " + str(list_of_goal_tiles))
+        # print("Goals: " + str(list_of_goal_tiles))
 
         # Match a black cluster with a white token
         match_pairs = match_with_white(board, list_of_goal_tiles)
@@ -88,8 +88,9 @@ def main():
         for key, value in board.white.items():
             white_stacks.append(board.white[key])
             
-        # bfs(board, goal_state, white_stacks, white_stacks[0])
         total_paths = a_star_main(board, goal_dict_list, match_pairs)
+        
+        print(total_paths)
 
 
 def set_up_goal(board, list_of_goal_tiles, match_pairs):
