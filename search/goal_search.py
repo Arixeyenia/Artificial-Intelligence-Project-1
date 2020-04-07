@@ -18,7 +18,6 @@ def get_black_range(board, stack):
     return black_coordinates
 
 # get all the black token and use the black range function
-# Time: O(len(coordinates)) | Space: O(black_ranges_dict)
 def get_all_black_ranges(board):
 
     black_ranges_dict = {}

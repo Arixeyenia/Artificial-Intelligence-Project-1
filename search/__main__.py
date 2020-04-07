@@ -14,9 +14,6 @@ def main():
         data = json.load(file)
         black_data = data["black"]
 
-        # TODO: REMOVE AFTER COMPLETION
-        # print(black_data)
-
         black_dict = {}
         for input_stack in black_data:
             coords = tuple(input_stack[1:])
@@ -31,8 +28,6 @@ def main():
 
         white_data = data["white"]
         white_dict = {}
-        # TODO: REMOVE AFTER COMPLETION
-        # print(white_data)
 
         for input_stack in white_data:
             coords = tuple(input_stack[1:])
@@ -47,37 +42,30 @@ def main():
 
         board = Board(black_dict, white_dict)
         goal_board = Board(black_dict, white_dict)
-        # print(board.black)
-             # Find the range of all black tiles
+        
+        # Find the range of all black tiles
         all_black_range = get_all_black_ranges(board)
-        print("All black range: " + str(all_black_range) + "\n")
 
         # Combine ranges of black tokens to take into account chain explosions
         chaining_range = check_chaining(board)
-        print("Chaining range: " + str(chaining_range) + "\n")
 
         # Find the intersections of adjacent black tokens
         get_intersection = get_intersections(board)
-        print("Intersections: " + str(get_intersection) + "\n")
 
         # Find the clusters of black tokens
         clusters = get_cluster(board)
-        print("Cluster: " + str(clusters) + "\n")
 
         list_of_goal_tiles = get_goal_tiles(board, clusters)
-        # print("Goals: " + str(list_of_goal_tiles))
 
         # Match a black cluster with a white token
         match_pairs = match_with_white(board, list_of_goal_tiles)
-        # print("matching: " + str(match_pairs))
-        
 
         board_dict = board.get_board_dict()
+        
         # set up the goals
         goals = set_up_goal(goal_board, list_of_goal_tiles, match_pairs)
         print_board(board_dict)
         
-
         goal_dict_list = []
         
         for goal in goals:
@@ -87,25 +75,18 @@ def main():
         white_stacks = []
         for key, value in board.white.items():
             white_stacks.append(board.white[key])
-            
-        total_paths = a_star_main(board, goal_dict_list, match_pairs)
         
-        print(total_paths)
+        
+        # Outputting the answer 
+        a_star_main(board, goal_dict_list, match_pairs)
 
 
 def set_up_goal(board, list_of_goal_tiles, match_pairs):
 
     # Get a list of boards of the final states
     goal_states = goal_state(board, list_of_goal_tiles, match_pairs)
-    print("goal state: " + str(goal_states))
 
     return goal_states
-
-
-# TODO: output moves
-def output_moves():
-    print("Output moves here")
-
 
 if __name__ == '__main__':
     main()
