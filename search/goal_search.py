@@ -187,6 +187,7 @@ def goal_tile_states(board, goal_tile, coord):
 
     new_board = board.get_copy()
     new_board.white[goal_tile] = new_board.white[coord]
+    new_board.white[coord].coordinates = goal_tile
     for piece in new_board.white[coord].pieces:
         piece.set_coordinates(goal_tile)
         if goal_tile != coord:
