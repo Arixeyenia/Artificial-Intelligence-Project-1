@@ -151,9 +151,9 @@ def a_star_search(start, end, white_stack, end_stack):
                 state_path.append(path_node.state)
                 path_node = path_node.parent
             # return path
-            # print(state_path[::-1])
+            return state_path[::-1]
             # path = [Stack1, Stack2, Stack3]
-            return path[::-1]
+            # return path[::-1]
 
         # # generate neighbouring nodes
         neighbours_list = []
@@ -166,8 +166,6 @@ def a_star_search(start, end, white_stack, end_stack):
 
                 #iterate number of spaces to move in that direction
                 for spaces in range(len(current_node.stack.pieces)):
-
-                    #current_stack = curr_stack_list[-1]
                 
                     new_state = current_node.state.get_copy()
                     new_stack = new_state.white[current_node.stack.coordinates]
@@ -176,7 +174,7 @@ def a_star_search(start, end, white_stack, end_stack):
                     if not stack:
                         continue
                     
-                    print_board(new_state.get_board_dict())
+                    # print_board(new_state.get_board_dict())
                     #if not explore(current_node.state, current_stack, current_stack.number, 1, direction):
                     #    continue
 
@@ -224,24 +222,19 @@ def a_star_search(start, end, white_stack, end_stack):
 
 def a_star_main(board, end_boards, goal_pairs):
     total_paths = []
-
-    # board = initial board
-    # end_boards => end state for each
-    # goal_pairs = {(white_stack) : end_board}
-
     white_dict = board.white
+    
+    all_boards = [board] + end_boards
+    
     for i, end_board in enumerate(end_boards):
-        new_white_dict = end_board.white
+        end_white_dict = end_board.white
         for coordinate, white_stack in white_dict.items():
-            for end_coord, end_stack in new_white_dict.items():
-                # end_boards[i] = final boards
+            for end_coord, end_stack in end_white_dict.items():
                 if goal_pairs[coordinate] == end_coord:
-                    if i == 0:
-                        total_paths.append(a_star_search(
-                            board, end_boards[i], white_dict[coordinate], new_white_dict[end_coord]))
-                    total_paths.append(a_star_search(
-                        end_boards[i-1], end_boards[i], white_dict[coordinate], new_white_dict[end_coord]))
-    print(total_paths)
+                    total_paths = a_star_search(all_boards[i], all_boards[i+1], white_dict[coordinate], end_white_dict[end_coord])
+    
+    for path in total_paths:
+        print_board(path.get_board_dict())
     return total_paths
 
 # get current stack by comparing the old state and the new state

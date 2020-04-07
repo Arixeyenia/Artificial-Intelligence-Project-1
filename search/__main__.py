@@ -65,17 +65,17 @@ def main():
         print("Cluster: " + str(clusters) + "\n")
 
         list_of_goal_tiles = get_goal_tiles(clusters)
-        print("Goals: " + str(list_of_goal_tiles))
+        # print("Goals: " + str(list_of_goal_tiles))
 
         # Match a black cluster with a white token
         match_pairs = match_with_white(board, list_of_goal_tiles)
-        print("matching: " + str(match_pairs))
+        # print("matching: " + str(match_pairs))
         
 
         board_dict = board.get_board_dict()
         # set up the goals
         goals = set_up_goal(goal_board, list_of_goal_tiles, match_pairs)
-        print_board(board_dict)
+        # print_board(board_dict)
         
 
         goal_dict_list = []
@@ -84,34 +84,12 @@ def main():
             goal_dict = goal
             goal_dict_list.append(goal_dict)
             
-            # print_board(goal_dict)
-            # for key, value in goal_dict.items():
-            #     print(str(key) + ": " + str(value))
         white_stacks = []
         for key, value in board.white.items():
             white_stacks.append(board.white[key])
             
-        bfs(board, goal_state, white_stacks, white_stacks[0])
-        # total_paths = a_star_main(board, goal_dict_list, match_pairs)
-        # print(total_paths)
-        # for key, value in board_dict.items():
-        #     print(str(key) + ": " + str(value))
-
-    # TODO: find and print winning action sequence
-
-    # lets say theres only one Stack (piece)
-    # path = a_star_search(board, white_stack.coordinate, end_coordinate)
-    # path will be saved as stacks, everything else is just coordinate.
-    # path = [Stack.coord, Stack.coord]
-
-    # white_stacks = board_white
-    # for white_stack in white_stacks
-        # # do a_star_search for all the white pieces
-
-        # path = a_star_search(board, white_stack.coordinate, find_nearest_black_range(black_stacks))
-
-# 
-
+        # bfs(board, goal_state, white_stacks, white_stacks[0])
+        total_paths = a_star_main(board, goal_dict_list, match_pairs)
 
 
 def set_up_goal(board, list_of_goal_tiles, match_pairs):
