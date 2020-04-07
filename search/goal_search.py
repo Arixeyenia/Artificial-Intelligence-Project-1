@@ -18,6 +18,7 @@ def get_black_range(board, stack):
     return black_coordinates
 
 # get all the black token and use the black range function
+# Time: O(len(coordinates)) | Space: O(black_ranges_dict)
 def get_all_black_ranges(board):
 
     black_ranges_dict = {}
@@ -40,13 +41,9 @@ def check_chaining(board):
     # blacks = [(x,y), (z,a)] a list of black coordinates
     for i in range(len(blacks)):
         for j in range(len(black_ranges_list)):
-
             if blacks[i] in black_ranges_list[j]:
                 black_ranges[blacks[j]] = list(
                     set(black_ranges[blacks[i]] + black_ranges_list[j]).difference(set([blacks[j]])))
-                print("old:	" + str(blacks[j]) + "	| " + str(black_ranges_list[j]) + "\n" + "new:	" + str(
-                    blacks[i]) + "	| " + str(black_ranges[blacks[i]]) + "\n" + "	{" + str(blacks[j]) + " : " +
-                    str(black_ranges[blacks[j]]) + "}" + "\n")
 
     return black_ranges
 
@@ -69,10 +66,8 @@ def get_intersections(board):
             # add all intersections to a list
             if len(list(set(black_ranges[i][1]).intersection(set(black_ranges[j][1])))) != 0:
 
-                current = set(black_ranges[i][1]).intersection(
-                    black_ranges[j][1])
-                intersection_class = Cluster(
-                    [black_ranges[i][0], black_ranges[j][0]], list(current))
+                current = set(black_ranges[i][1]).intersection(black_ranges[j][1])
+                intersection_class = Cluster([black_ranges[i][0], black_ranges[j][0]], list(current))
                 intersection_list.append(intersection_class)
                 a_list.append([black_ranges[i][0], black_ranges[j][0]])
 
@@ -140,13 +135,7 @@ def get_cluster(board):
     else:
         return False
 
-# check for 
-
-def safe_tile_check():
-    
-    
-    return True
-
+# Check if a potential goal tile 
 def white_victims(board, coordinates):
     stacks = []
     top_left = (coordinates[0] - 1, coordinates[1] + 1)
@@ -161,14 +150,11 @@ def white_victims(board, coordinates):
         return True
     return False
 
-
 #  Get a goal tile from each cluster and append to a list
 def get_goal_tiles(board, cluster_dict):
 
     goal_tile_list = []
     cluster_list = list(cluster_dict.values())
-
-	# TODO: assuming something didnt work, check range later
  
     for i, cluster in enumerate(cluster_list):
         for j in range(len(cluster)):            
@@ -179,7 +165,6 @@ def get_goal_tiles(board, cluster_dict):
                 goal_tile_list.append(cluster[j])
                 break
         
-    print(goal_tile_list)
     return goal_tile_list
 
 # Create a new goal tile
