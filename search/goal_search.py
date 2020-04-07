@@ -3,8 +3,6 @@ from search.game import Piece, Stack, Board, Directions, Cluster
 from search.actions import move, valid_move_check, boom, remove_stack, range_check, white_range_check
 
 # Get one black token and find its range
-
-
 def get_black_range(board, stack):
     coordinates = stack.coordinates
     black_coordinates = []
@@ -20,8 +18,6 @@ def get_black_range(board, stack):
     return black_coordinates
 
 # get all the black token and use the black range function
-
-
 def get_all_black_ranges(board):
 
     black_ranges_dict = {}
@@ -35,8 +31,6 @@ def get_all_black_ranges(board):
     return black_ranges_dict
 
 # check for adjacent pieces for chain explosions
-
-
 def check_chaining(board):
     black_ranges = get_all_black_ranges(board)
     # black_ranges = {(x,y): [(a,b),(c,d),(e,f)]}
@@ -57,8 +51,6 @@ def check_chaining(board):
     return black_ranges
 
 # get the intersecting black ranges
-
-
 def get_intersections(board):
     intersection_list = []
     a_list = []
@@ -127,7 +119,8 @@ def get_cluster(board):
 
                 return cluster_dict
 
-            if (current.intersection(set(intersection_list[j].coordinates)) != set()) and (current_inter.intersection(set(intersection_list[j].intersection)) != set()):
+            if (current.intersection(set(intersection_list[j].coordinates)) != set()) and (
+                current_inter.intersection(set(intersection_list[j].intersection)) != set()):
 
                 # unionize the coordinates
                 current = current.union(set(intersection_list[j].coordinates))
@@ -161,12 +154,9 @@ def get_goal_tiles(cluster_dict):
     return goal_tile_list
 
 # Create a new goal tile
-
-
 def goal_tile_states(board, goal_tile, coord):
 
     new_board = board.get_copy()
-    # coords = list(new_board.white.keys())
     new_board.white[goal_tile] = new_board.white[coord]
     for piece in new_board.white[coord].pieces:
         piece.set_coordinates(goal_tile)
@@ -174,9 +164,8 @@ def goal_tile_states(board, goal_tile, coord):
             del new_board.white[coord]
 
     return new_board
+
 # match a starting white stack with a goal tile
-
-
 def match_with_white(board, end_boards):
 
     white_stacks = list(board.get_white().keys())
@@ -203,22 +192,6 @@ def goal_state(board, goal_tile_list, goal_pair):
                 consecutive_states.append(state)
                 
     return consecutive_states
-
-# def get_goal_coordinate(board, end_board, goal_tile_list, goal_pairs):
-
-#     state = board.get_copy()
-#     new_coords = list(end_board.white.items())
-	
-#     coords = list(state.white.keys())
-    
-#     for coordinate, stack in end_board.white.items():
-#         for coord in 
-     
- 
-#     for goal_tile in goal_tile_list:
-#         for coord in coords:
-#             if goal_pairs[coord] == goal_tile:
-#                 return goal_tile
 
 # Check if the tile is valid
 def valid_tile(coordinate, board):

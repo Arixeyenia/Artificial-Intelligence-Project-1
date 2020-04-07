@@ -44,8 +44,6 @@ def initialize_start(start, white_stack):
 
 # initialize_start(Stack.coordinate end)
 # stack with 0 coordinates
-
-
 def initialize_end(end, end_stack):
 
     # get end node stack
@@ -56,53 +54,23 @@ def initialize_end(end, end_stack):
     end_node.f = 0
     return end_node
 
-# convert coordinates to
-
-# - expand node
-
-
-def explore_neighbours(current_node, white_stack):
-
-    neighbours_list = []
-
-    # current_stack = white_stack
-
-    # for direction in Directions:
-
-    #     if not explore(current_node.state, current_stack, white_stack.number, 1, direction):
-    #         continue
-
-    #     node_state = explore(current_node.state, current_stack,
-    #                          white_stack.number, 1, direction)
-        
-    #     # create neigbours node node
-    #     neighbours_node = Node(current_node, node_state,
-    #                            current_stack, direction)
-
-    #     # add to neighbours array
-    #     neighbours_list.append(neighbours_node)
-
-    return neighbours_list
-
 # find the distance between two nodes
 # - get best node (the thing a* is based on) = heuristics
-
-
 def heuristics(start_node, target_node):
+    # D = path cost
     D = 1
     dx = abs(start_node.stack.coordinates[0] -
              target_node.stack.coordinates[0])
     dy = abs(start_node.stack.coordinates[1] -
              target_node.stack.coordinates[1])
+    
+    
     return D * (dx + dy)
 
 # - a star search - the main search function, adapted from: https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
-
-
 def a_star_search(start, end, white_stack, end_stack):
 
     # Initialize the start and end node
-    # star_node = board.white[coord]
     start_node = initialize_start(start, white_stack)
     end_node = initialize_end(end, white_stack)
 
@@ -111,11 +79,8 @@ def a_star_search(start, end, white_stack, end_stack):
     # initialize closed list = nodes that has been evaluated
     closed_list = []
 
-    curr_stack_list = []
-
     # add the first node to the open list
     open_list.append(start_node)
-    curr_stack_list.append(white_stack)
 
     # open FUNCTION: while open list is not empty
     while len(open_list) > 0:
@@ -139,7 +104,7 @@ def a_star_search(start, end, white_stack, end_stack):
         # convert the paths from coordinates to Stacks.
         # if current_node reached the goal_node
         if goal_test(current_node, end_node):
-            # return
+            
             path = []
             state_path = []
             path_node = current_node
@@ -152,10 +117,9 @@ def a_star_search(start, end, white_stack, end_stack):
                 path_node = path_node.parent
                 
             # return state_path[::-1]
-            # path = [Stack1, Stack2, Stack3]
             return path[::-1]
 
-        # # generate neighbouring nodes
+        # generate neighbouring nodes
         neighbours_list = []
 
         #iterate how many piececs to move
@@ -168,23 +132,16 @@ def a_star_search(start, end, white_stack, end_stack):
                 for spaces in range(len(current_node.stack.pieces)):
                 
                     new_state = current_node.state.get_copy()
+                    print_board(new_state.get_board_dict())
                     new_stack = new_state.white[current_node.stack.coordinates]
+                    print(current_node.stack.coordinates)
 
                     stack = move(new_state, new_stack, no_pieces+1, spaces+1, direction)
                     if not stack:
                         continue
-                    
-                    # print_board(new_state.get_board_dict())
-                    #if not explore(current_node.state, current_stack, current_stack.number, 1, direction):
-                    #    continue
-
-                    #node_state = explore(
-                    #    current_node.state, current_stack, current_stack.number, 1, direction)
 
                     # create neigbours node node
                     neighbour_node = Node(current_node, new_state, stack, direction)
-
-                    # update the current stack
 
                     # add to neighbours array
                     neighbours_list.append(neighbour_node)
@@ -207,16 +164,11 @@ def a_star_search(start, end, white_stack, end_stack):
                     neighbour_node, end_node)
                 neighbour_node.f = neighbour_node.g + neighbour_node.h
                 
-                #current_stack = get_current_stack(neighbour_node.state)
-                #curr_stack_list.append(current_stack)
-                
-                
                 # if node is already in open list, dont add it in
                 if neighbour_node in open_list:
                     continue
 
             # Add the child to the open list
-
             open_list.append(neighbour_node)
 
 
