@@ -1,4 +1,4 @@
-from search.game import Piece, Stack, Directions, Board
+from game import Piece, Stack, Directions, Board
 
 # Move action function that actually does the action on the piece i.e. piece will changee
 # takes in neighbours of a current state, and the piece itself, 
@@ -54,6 +54,9 @@ def move(board, stack, no_pieces, spaces, direction):
     new_coord = valid_move_check(board, stack, no_pieces, direction, spaces)
     pieces = stack.pieces[:no_pieces]
 
+    for piece in pieces:
+        piece.set_coordinates(new_coord)
+        
     if new_coord:
         if board.white[coord].number == no_pieces:
             if new_coord in board.white:
@@ -66,8 +69,6 @@ def move(board, stack, no_pieces, spaces, direction):
             board.white[new_coord] = Stack(pieces, stack.colour)
             board.white[coord].remove_pieces(pieces)
 
-        for piece in pieces:
-            piece.set_coordinates(new_coord)
         return board.white[new_coord]
     else:
         return False

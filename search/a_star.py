@@ -2,10 +2,10 @@
 
 from operator import itemgetter
 
-from search.game import Piece, Stack, Board, Cluster, Directions
-from search.actions import valid_move_check, move, explore
-from search.util import print_move, print_boom, print_board
-from search.goal_search import match_with_white
+from game import Piece, Stack, Board, Cluster, Directions
+from actions import valid_move_check, move, explore
+from util import print_move, print_boom, print_board
+from goal_search import match_with_white
 
 # Define the node Node(Node parent, state current_state)
 
@@ -149,12 +149,11 @@ def a_star_search(start, end, white_stack, end_stack):
         for neighbour_node in neighbours_list:
 
             # check if node is explored and if not just skip
-            if expanded_previously(closed_list, neighbour_node):
+            if is_in_list(closed_list, neighbour_node):
                 continue
 
             # calculate f value of current path
-            neighbour_path_cost = current_node.g + \
-                heuristics(current_node, end_node)
+            neighbour_path_cost = current_node.g + heuristics(current_node, neighbour_node)
 
             # - goal test
             # check if the new path is shorter or neighbour is not included in open list yet
@@ -164,9 +163,9 @@ def a_star_search(start, end, white_stack, end_stack):
                     neighbour_node, end_node)
                 neighbour_node.f = neighbour_node.g + neighbour_node.h
                 
-                # if node is already in open list, dont add it in
-                if neighbour_node in open_list:
-                    continue
+            # if node is already in open list, dont add it in
+            if is_in_list(open_list, neighbour_node):
+                continue
 
             # Add the child to the open list
             open_list.append(neighbour_node)
@@ -209,11 +208,11 @@ def get_current_stack(new_state):
 #     for coordinate, stack in white_dict.items():
 #         for goal_tile in goal_tile_list:
 
-def expanded_previously(closed_list, node):
+def is_in_list(open_closed_list, node):
     node_white_coordinates = sorted(list(node.state.white.keys()), key=itemgetter(0))
-    for closed_node in closed_list:
-        closed_node_white_coordinates = sorted(list(closed_node.state.white.keys()), key=itemgetter(0))
-        if node_white_coordinates == closed_node_white_coordinates:
+    for node in open_closed_list:
+        open_closed_node_white_coordinates = sorted(list(node.state.white.keys()), key=itemgetter(0))
+        if node_white_coordinates == open_closed_node_white_coordinates:
             return True
 
     return False
