@@ -65,24 +65,22 @@ def explore_neighbours(current_node, white_stack):
 
     neighbours_list = []
 
-    current_stack = white_stack
+    # current_stack = white_stack
 
-    for direction in Directions:
+    # for direction in Directions:
 
-        if not explore(current_node.state, current_stack, white_stack.number, 1, direction):
-            continue
+    #     if not explore(current_node.state, current_stack, white_stack.number, 1, direction):
+    #         continue
 
-        node_state = explore(current_node.state, current_stack,
-                             white_stack.number, 1, direction)
+    #     node_state = explore(current_node.state, current_stack,
+    #                          white_stack.number, 1, direction)
         
-        print(node_state)
+    #     # create neigbours node node
+    #     neighbours_node = Node(current_node, node_state,
+    #                            current_stack, direction)
 
-        # create neigbours node node
-        neighbours_node = Node(current_node, node_state,
-                               current_stack, direction)
-
-        # add to neighbours array
-        neighbours_list.append(neighbours_node)
+    #     # add to neighbours array
+    #     neighbours_list.append(neighbours_node)
 
     return neighbours_list
 
@@ -127,7 +125,7 @@ def a_star_search(start, end, white_stack, end_stack):
         current_node_index = 0
 
         for i in range(len(open_list)):
-            
+
             # make a sorting function comparing the open and closed list
             if open_list[i].f < current_node.f:
                 current_node = open_list[i]
@@ -158,7 +156,6 @@ def a_star_search(start, end, white_stack, end_stack):
             return path[::-1]
 
         # # generate neighbouring nodes
-
         neighbours_list = []
 
         #iterate how many piececs to move
@@ -217,12 +214,11 @@ def a_star_search(start, end, white_stack, end_stack):
                 
                 
                 # if node is already in open list, dont add it in
-                for open_node in open_list:
-                    if neighbour_node.state == open_node.state:
-                        continue
+                if neighbour_node in open_list:
+                    continue
 
             # Add the child to the open list
-            
+
             open_list.append(neighbour_node)
 
 

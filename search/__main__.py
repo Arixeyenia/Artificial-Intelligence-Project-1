@@ -6,6 +6,7 @@ from search.game import Piece, Stack, Board, Cluster, Directions
 from search.actions import move, valid_move_check, boom, remove_stack, range_check
 from search.goal_search import get_black_range, get_all_black_ranges, get_cluster, get_goal_tiles, get_intersections, check_chaining, match_with_white, goal_state
 from search.a_star import a_star_search, a_star_main, explore_neighbours
+from search.bfs import bfs
 
 
 def main():
@@ -86,8 +87,12 @@ def main():
             # print_board(goal_dict)
             # for key, value in goal_dict.items():
             #     print(str(key) + ": " + str(value))
-
-        total_paths = a_star_main(board, goal_dict_list, match_pairs)
+        white_stacks = []
+        for key, value in board.white.items():
+            white_stacks.append(board.white[key])
+            
+        bfs(board, goal_state, white_stacks, white_stacks[0])
+        # total_paths = a_star_main(board, goal_dict_list, match_pairs)
         # print(total_paths)
         # for key, value in board_dict.items():
         #     print(str(key) + ": " + str(value))

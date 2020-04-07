@@ -17,6 +17,7 @@ class Stack:
         self.colour = colour
         self.number = len(pieces)
         self.coordinates = pieces[0].coordinates
+        self.prev_coordinates = None
 
     def __str__(self):
         return self.colour + str(self.number)

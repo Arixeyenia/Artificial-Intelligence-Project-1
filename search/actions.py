@@ -1,39 +1,54 @@
 from search.game import Piece, Stack, Directions, Board
 
-#Move action function that actually does the action on the piece i.e. piece will changee
-def explore(board, stack, no_pieces, spaces, direction):
+# Move action function that actually does the action on the piece i.e. piece will changee
+# takes in neighbours of a current state, and the piece itself, 
+# returns a copy of a new potetial
 
-    coord = stack.coordinates
+# explores the possible adjacent tiles and return the state of the board
+def explore(board, stack, no_pieces, spaces, direction):
+    
+    # TODO:
+    # Explore is going to be called over and over to explore the neighbouring
+    # tiles, therefore the value of board and stack must be updated as well.
+    # Explore is used in a_search.py to expand neighbouring coordinates, but right now it can only
+    # explore the neighbouring node of the initial node.
+    
+    coord = stack.coordinates 
+    print("First coord: ", coord)
 
     new_coord = valid_move_check(board, stack, no_pieces, direction, spaces)
     pieces = stack.pieces[:no_pieces]
-    
+
     new_board = board.get_copy()
 
     if new_coord:
-        # print(new_coord)
-        for piece in pieces:
-            piece.set_coordinates(new_coord)
-            # piece.coordinates = new_coord
-            
+
         if board.white[coord].number == no_pieces:
-            # new_board.white[coord] = new_board.white[coord]
+            new_board.white[coord] = new_board.white[coord]
             new_board.white[new_coord] = board.white[coord]
+            
+            # new_board.white[new_coord].coordinates = new_coord
+            # ^^^^
+            # If i try to update the new coordinate of the stack, 
+            # the value of coord = stack.coordinates will also change and 
+            # will cause KeyError
+        
             new_board.white[new_coord].prev_coordinates = coord
             del new_board.white[coord]
-            
+            # ^^^^
+            # Doing this will also cause a KeyError
+
         elif new_board.white[coord].number > no_pieces:
             new_board.white[new_coord] = Stack(pieces, stack.colour)
             new_board.white[coord].remove_pieces(pieces)
-            
-        new_board.white[new_coord].set_coordinates(new_coord)
-        
-        print(new_board.white[new_coord].coordinates)
-        
+
+        for piece in pieces:
+            piece.set_coordinates(new_coord)
+            piece.coordinates = new_coord
         return new_board
     else:
         return False
-    
+
 def move(board, stack, no_pieces, spaces, direction):
     coord = stack.coordinates
     new_coord = valid_move_check(board, stack, no_pieces, direction, spaces)
@@ -57,11 +72,13 @@ def move(board, stack, no_pieces, spaces, direction):
     else:
         return False
 
-#check if moving piece to specified direction is a valid move i.e. not blocked by wall or enemy token
+# check if moving piece to specified direction is a valid move i.e. not blocked by wall or enemy token
+
+
 def valid_move_check(board, stack, no_pieces, direction, spaces):
     if stack.number < no_pieces or stack.number < spaces:
         return False
-    
+
     if direction == Directions.left:
         new_coord = (stack.coordinates[0] - spaces, stack.coordinates[1])
         if new_coord[0] < 0 or (new_coord in board.black):
@@ -90,15 +107,19 @@ def valid_move_check(board, stack, no_pieces, direction, spaces):
         else:
             return new_coord
 
-#boom a stack - uses range_check and remove_stack
-#will actually take the action  
+# boom a stack - uses range_check and remove_stack
+# will actually take the action
+
+
 def boom(board, stack):
     stacks = range_check(board, stack)
     remove_stack(board, stack)
     for stack in stacks:
         boom(board, stack)
 
-#remove stack from the game/dict
+# remove stack from the game/dict
+
+
 def remove_stack(board, stack):
     if stack.coordinates in board.get_board_dict():
         coord = stack.coordinates
@@ -107,7 +128,9 @@ def remove_stack(board, stack):
         elif stack.colour == 'W':
             board.white.pop(coord)
 
-#return stacks that is in the range of the stack specified
+# return stacks that is in the range of the stack specified
+
+
 def range_check(board, stack):
     coordinates = stack.coordinates
     stacks = []
@@ -122,7 +145,9 @@ def range_check(board, stack):
                 stacks.append(board.get_board_dict()[check_coord])
     return stacks
 
-#return white stacks that is in the range of the stack specified
+# return white stacks that is in the range of the stack specified
+
+
 def white_range_check(board, stack):
     coordinates = stack.coordinates
     stacks = []
@@ -137,7 +162,9 @@ def white_range_check(board, stack):
                 stacks.append(board.white[check_coord])
     return stacks
 
-#return black stacks that is in the range of the stack specified
+# return black stacks that is in the range of the stack specified
+
+
 def black_range_check(board, stack):
     coordinates = stack.coordinates
     stacks = []
