@@ -228,6 +228,7 @@ def a_star_main(board, end_boards, goal_pairs):
     
     for i, end_board in enumerate(end_boards):
         end_white_dict = end_board.white
+        white_dict = all_boards[i].white
         for coordinate, white_stack in white_dict.items():
             for end_coord, end_stack in end_white_dict.items():
                 if goal_pairs[coordinate] == end_coord:

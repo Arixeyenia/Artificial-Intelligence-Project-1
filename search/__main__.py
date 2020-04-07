@@ -75,7 +75,7 @@ def main():
         board_dict = board.get_board_dict()
         # set up the goals
         goals = set_up_goal(goal_board, list_of_goal_tiles, match_pairs)
-        # print_board(board_dict)
+        print_board(board_dict)
         
 
         goal_dict_list = []
