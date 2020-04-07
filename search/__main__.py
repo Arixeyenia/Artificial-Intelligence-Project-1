@@ -5,7 +5,7 @@ from search.util import print_move, print_boom, print_board
 from search.game import Piece, Stack, Board, Cluster, Directions
 from search.actions import move, valid_move_check, boom, remove_stack, range_check
 from search.goal_search import get_black_range, get_all_black_ranges, get_cluster, get_goal_tiles, get_intersections, check_chaining, match_with_white, goal_state
-from search.a_star import a_star_search, a_star_main, explore_neighbours
+from search.a_star import a_star_search, a_star_main
 from search.bfs import bfs
 
 
@@ -64,8 +64,8 @@ def main():
         clusters = get_cluster(board)
         print("Cluster: " + str(clusters) + "\n")
 
-        list_of_goal_tiles = get_goal_tiles(clusters)
-        # print("Goals: " + str(list_of_goal_tiles))
+        list_of_goal_tiles = get_goal_tiles(board, clusters)
+        print("Goals: " + str(list_of_goal_tiles))
 
         # Match a black cluster with a white token
         match_pairs = match_with_white(board, list_of_goal_tiles)

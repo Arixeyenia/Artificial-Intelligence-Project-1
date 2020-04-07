@@ -140,17 +140,46 @@ def get_cluster(board):
     else:
         return False
 
+# check for 
+
+def safe_tile_check():
+    
+    
+    return True
+
+def white_victims(board, coordinates):
+    stacks = []
+    top_left = (coordinates[0] - 1, coordinates[1] + 1)
+    for x in range(3):
+        for y in range(3):
+            check_coord = (top_left[0] + x, top_left[1] - y)
+            if check_coord in board.white:
+                if (x == 1 and y == 1):
+                    continue
+                stacks.append(board.white[check_coord])
+    if len(stacks) != 0:
+        return True
+    return False
+
+
 #  Get a goal tile from each cluster and append to a list
-
-
-def get_goal_tiles(cluster_dict):
+def get_goal_tiles(board, cluster_dict):
 
     goal_tile_list = []
     cluster_list = list(cluster_dict.values())
 
 	# TODO: assuming something didnt work, check range later
-    for cluster in cluster_list:
-        goal_tile_list.append(cluster[0])
+ 
+    for i, cluster in enumerate(cluster_list):
+        for j in range(len(cluster)):            
+            # if boom range results in white catastrophe, thank u next
+            if white_victims(board, cluster[j]):
+                continue
+            else:
+                goal_tile_list.append(cluster[j])
+                break
+        
+    print(goal_tile_list)
     return goal_tile_list
 
 # Create a new goal tile

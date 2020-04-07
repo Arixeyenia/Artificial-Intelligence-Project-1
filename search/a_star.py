@@ -132,9 +132,9 @@ def a_star_search(start, end, white_stack, end_stack):
                 for spaces in range(len(current_node.stack.pieces)):
                 
                     new_state = current_node.state.get_copy()
-                    print_board(new_state.get_board_dict())
+                    # print_board(new_state.get_board_dict())
                     new_stack = new_state.white[current_node.stack.coordinates]
-                    print(current_node.stack.coordinates)
+                    # print(current_node.stack.coordinates)
 
                     stack = move(new_state, new_stack, no_pieces+1, spaces+1, direction)
                     if not stack:
@@ -186,8 +186,8 @@ def a_star_main(board, end_boards, goal_pairs):
                 if goal_pairs[coordinate] == end_coord:
                     total_paths = a_star_search(all_boards[i], all_boards[i+1], white_dict[coordinate], end_white_dict[end_coord])
     
-    for path in total_paths:
-        print_board(path.state.get_board_dict())
+    # for path in total_paths:
+        # print_board(path.state.get_board_dict())
         # print_board(path.get_board_dict())
     return total_paths
 
