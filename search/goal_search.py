@@ -93,8 +93,6 @@ def get_cluster(board):
 
     cluster_dict = {}
 
-    print(len(intersection_list))
-
     for i in range(len(intersection_list)):
 
         current = set(intersection_list[i].coordinates)

@@ -3,7 +3,7 @@
 from operator import itemgetter
 
 from search.game import Piece, Stack, Board, Cluster, Directions
-from search.actions import valid_move_check, move, explore
+from search.actions import valid_move_check, move
 from search.util import print_move, print_boom, print_board
 from search.goal_search import match_with_white
 
@@ -141,6 +141,8 @@ def a_star_search(start, end, white_stack, end_stack):
 
                     # create neigbours node node
                     neighbour_node = Node(current_node, new_state, stack, direction)
+                    if state_in_list(closed_list, new_state):
+                        continue
 
                     # add to neighbours array
                     neighbours_list.append(neighbour_node)
@@ -230,6 +232,15 @@ def get_current_stack(new_state):
 
 #     for coordinate, stack in white_dict.items():
 #         for goal_tile in goal_tile_list:
+
+def state_in_list(open_closed_list, state):
+    state_white_coordinates = sorted(list(state.white.keys()), key=itemgetter(0))
+    for node in open_closed_list:
+        open_closed_state_white_coordinates = sorted(list(node.state.white.keys()), key=itemgetter(0))
+        if state_white_coordinates == open_closed_state_white_coordinates:
+            return True
+
+    return False
 
 def is_in_list(open_closed_list, node):
     node_white_coordinates = sorted(list(node.state.white.keys()), key=itemgetter(0))
