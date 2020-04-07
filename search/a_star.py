@@ -63,8 +63,7 @@ def heuristics(start_node, target_node):
              target_node.stack.coordinates[0])
     dy = abs(start_node.stack.coordinates[1] -
              target_node.stack.coordinates[1])
-    
-    
+
     return D * (dx + dy)
 
 # - a star search - the main search function, adapted from: https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
@@ -72,7 +71,7 @@ def a_star_search(start, end, white_stack, end_stack):
 
     # Initialize the start and end node
     start_node = initialize_start(start, white_stack)
-    end_node = initialize_end(end, white_stack)
+    end_node = initialize_end(end, end_stack)
 
     # Initialize open list = nodes that we've calculated the f value
     open_list = []
@@ -100,6 +99,9 @@ def a_star_search(start, end, white_stack, end_stack):
         open_list.remove(current_node)
         # add current_node to closed list
         closed_list.append(current_node)
+
+        print(current_node.stack.coordinates)
+        print(current_node.f)
 
         # convert the paths from coordinates to Stacks.
         # if current_node reached the goal_node
@@ -132,9 +134,7 @@ def a_star_search(start, end, white_stack, end_stack):
                 for spaces in range(len(current_node.stack.pieces)):
                 
                     new_state = current_node.state.get_copy()
-                    # print_board(new_state.get_board_dict())
                     new_stack = new_state.white[current_node.stack.coordinates]
-                    # print(current_node.stack.coordinates)
 
                     stack = move(new_state, new_stack, no_pieces+1, spaces+1, direction)
                     if not stack:
@@ -154,7 +154,7 @@ def a_star_search(start, end, white_stack, end_stack):
 
             # calculate f value of current path
             neighbour_path_cost = current_node.g + \
-                heuristics(current_node, neighbour_node)
+                heuristics(current_node, end_node)
 
             # - goal test
             # check if the new path is shorter or neighbour is not included in open list yet
@@ -183,8 +183,9 @@ def a_star_main(board, end_boards, goal_pairs):
         white_dict = all_boards[i].white
         for coordinate, white_stack in white_dict.items():
             for end_coord, end_stack in end_white_dict.items():
-                if goal_pairs[coordinate] == end_coord:
-                    total_paths = a_star_search(all_boards[i], all_boards[i+1], white_dict[coordinate], end_white_dict[end_coord])
+                if coordinate in goal_pairs:
+                    if goal_pairs[coordinate] == end_coord:
+                        total_paths = a_star_search(all_boards[i], all_boards[i+1], white_dict[coordinate], end_white_dict[end_coord])
     
     # for path in total_paths:
         # print_board(path.state.get_board_dict())
